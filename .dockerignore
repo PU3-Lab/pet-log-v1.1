@@ -1,0 +1,27 @@
+# Data and Logs
+*.log
+logs_*.zip
+
+# Caches and Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.venv
+.pytest_cache
+.ruff_cache
+.uv-cache
+.azure-deploy
+.chroma_db/
+
+# Secrets
+.env
+.env.*
+
+# Project docs and tools
+tests/
+scripts/
+README.md
+Dockerfile
+.dockerignore
+
