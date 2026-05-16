@@ -1,0 +1,43 @@
+{
+  "name": "pet-log-web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "node scripts/run-dev.mjs",
+    "build": "next build",
+    "azure:package": "bash scripts/azure-package.sh",
+    "azure:deploy": "bash scripts/azure-deploy.sh",
+    "start": "next start",
+    "lint": "eslint",
+    "lint:fix": "eslint --fix",
+    "test": "tsx --test \"src/**/*.test.ts\"",
+    "test:e2e": "playwright test tests/e2e",
+    "eval": "npm run eval:ui && npm run eval:flow",
+    "eval:ui": "playwright test tests/eval/mobile-ui.spec.ts",
+    "eval:flow": "playwright test tests/e2e/record-flow.spec.ts",
+    "eval:visual": "playwright test tests/eval/visual-screenshots.spec.ts",
+    "typecheck": "tsc --noEmit",
+    "verify:care-navigation": "tsx --test src/lib/action-navigation.test.ts src/lib/analysis-navigation.test.ts src/lib/notification-border-animation.test.ts src/lib/timeline-navigation.test.ts && tsc --noEmit && eslint src/app/page.tsx src/app/analysis/page.tsx src/app/notifications/page.tsx src/app/timeline/page.tsx src/app/timeline/timeline-client.tsx src/lib/action-navigation.ts src/lib/action-navigation.test.ts src/lib/analysis-navigation.ts src/lib/analysis-navigation.test.ts src/lib/notification-border-animation.test.ts src/lib/timeline-navigation.ts src/lib/timeline-navigation.test.ts"
+  },
+  "dependencies": {
+    "axios": "^1.15.2",
+    "next": "^16.2.4",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5"
+  },
+  "overrides": {
+    "postcss": "8.5.12"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.59.1",
+    "@tailwindcss/postcss": "latest",
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "eslint": "latest",
+    "eslint-config-next": "^16.2.4",
+    "tailwindcss": "latest",
+    "tsx": "^4.21.0",
+    "typescript": "latest"
+  }
+}

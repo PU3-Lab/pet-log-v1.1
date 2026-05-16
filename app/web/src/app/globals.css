@@ -1,0 +1,628 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+}
+
+body {
+  background: #f2f3ee;
+  margin: 0;
+  font-family: Arial, "Apple SD Gothic Neo", "Noto Sans KR", Helvetica, sans-serif;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+a {
+  text-decoration: none;
+}
+
+.pet-log-card-rise {
+  animation: pet-log-card-rise 420ms linear both;
+}
+
+.pet-log-float-soft {
+  animation: pet-log-float-soft 3.2s ease-in-out infinite;
+}
+
+.pet-log-pulse-dot {
+  animation: pet-log-pulse-dot 1.8s ease-in-out infinite;
+}
+
+.pet-log-pressable {
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    border-color 160ms ease,
+    background-color 160ms ease;
+}
+
+.pet-log-pressable:active {
+  transform: scale(0.98);
+}
+
+.pet-log-chat-sparkle-border {
+  --pet-log-border-angle: 0deg;
+  position: relative;
+  isolation: isolate;
+  border: 1px solid transparent !important;
+  background:
+    linear-gradient(#1f2922, #1f2922) padding-box,
+    conic-gradient(
+      from var(--pet-log-border-angle),
+      rgba(255, 255, 255, 0.36) 0deg,
+      rgba(255, 255, 255, 0.36) 72deg,
+      rgba(203, 213, 225, 0.92) 106deg,
+      rgba(255, 255, 255, 1) 134deg,
+      rgba(148, 163, 184, 0.86) 168deg,
+      rgba(226, 232, 240, 0.42) 222deg,
+      rgba(255, 255, 255, 0.36) 360deg
+    )
+    border-box !important;
+  box-shadow:
+    0 6px 14px rgba(31, 41, 34, 0.14),
+    0 0 6px rgba(255, 255, 255, 0.16);
+  animation:
+    pet-log-border-glide 2.4s linear infinite,
+    pet-log-float-soft 3.2s ease-in-out infinite;
+}
+
+.pet-log-chat-sparkle-border::after {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+  box-shadow:
+    inset 0 0 8px rgba(255, 255, 255, 0.12),
+    0 0 5px rgba(226, 232, 240, 0.16);
+  opacity: 0.78;
+  pointer-events: none;
+  animation: pet-log-chat-sparkle 1.8s ease-in-out infinite;
+}
+
+.pet-log-chat-sparkle-border > * {
+  position: relative;
+  z-index: 1;
+}
+
+.pet-log-chart-draw {
+  animation: pet-log-chart-draw 680ms ease-out both;
+  stroke-dasharray: 420;
+  stroke-dashoffset: 420;
+}
+
+.pet-log-typing-bubble {
+  position: relative;
+  display: inline-flex;
+  isolation: isolate;
+  min-height: 34px;
+  min-width: 64px;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 4px 0 2px 8px;
+  border: 1px solid #dfe8d9;
+  border-radius: 17px;
+  background: #fbfdf8;
+  padding: 8px 12px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    0 2px 8px rgba(31, 41, 34, 0.05);
+}
+
+.pet-log-typing-bubble::before,
+.pet-log-typing-bubble::after {
+  content: "";
+  position: absolute;
+  clip-path: polygon(100% 0, 0 38%, 100% 100%);
+}
+
+.pet-log-typing-bubble::before {
+  left: -8px;
+  top: 10px;
+  z-index: -2;
+  height: 13px;
+  width: 10px;
+  background: #dfe8d9;
+}
+
+.pet-log-typing-bubble::after {
+  left: -6px;
+  top: 11px;
+  z-index: -1;
+  height: 11px;
+  width: 8px;
+  background: #fbfdf8;
+}
+
+.pet-log-typing-dot {
+  position: relative;
+  z-index: 1;
+  display: block;
+  height: 7px;
+  width: 7px;
+  border-radius: 999px;
+  background: #16804b;
+  box-shadow:
+    0 0 0 1px rgba(22, 128, 75, 0.12),
+    0 0 5px rgba(22, 128, 75, 0.2);
+  animation: pet-log-typing-dot 1.15s ease-in-out infinite;
+  will-change: opacity, transform;
+}
+
+@property --pet-log-border-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.pet-log-loading-border {
+  --pet-log-border-angle: 0deg;
+  --pet-log-loading-border-muted: rgba(22, 128, 75, 0.18);
+  --pet-log-loading-border-soft: rgba(183, 230, 130, 0.7);
+  --pet-log-loading-border-bright: rgba(74, 222, 128, 0.95);
+  --pet-log-loading-border-strong: rgba(22, 128, 75, 0.9);
+  --pet-log-loading-border-glow: rgba(74, 222, 128, 0.42);
+  --pet-log-loading-border-shadow: rgba(74, 222, 128, 0.08);
+  --pet-log-loading-sheen-strong: rgba(74, 222, 128, 0.2);
+  --pet-log-loading-sheen-soft: rgba(183, 230, 130, 0.08);
+  --pet-log-loading-inner-border: rgba(74, 222, 128, 0.18);
+  --pet-log-loading-inner-glow: rgba(74, 222, 128, 0.08);
+  --pet-log-loading-outer-glow: rgba(74, 222, 128, 0.12);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden !important;
+  border: 1px solid transparent !important;
+  background:
+    linear-gradient(#fff, #fff) padding-box,
+    conic-gradient(
+      from var(--pet-log-border-angle),
+      var(--pet-log-loading-border-muted) 0deg,
+      var(--pet-log-loading-border-muted) 72deg,
+      var(--pet-log-loading-border-soft) 118deg,
+      var(--pet-log-loading-border-bright) 142deg,
+      var(--pet-log-loading-border-strong) 154deg,
+      var(--pet-log-loading-border-glow) 170deg,
+      var(--pet-log-loading-border-muted) 220deg,
+      var(--pet-log-loading-border-muted) 360deg
+    )
+    border-box !important;
+  box-shadow:
+    0 12px 34px rgba(49, 65, 44, 0.11),
+    0 0 0 1px var(--pet-log-loading-border-shadow);
+  animation: pet-log-border-glide 2.7s linear infinite;
+}
+
+.pet-log-shopping-loading-border {
+  --pet-log-loading-border-muted: rgba(187, 114, 30, 0.18);
+  --pet-log-loading-border-soft: rgba(255, 210, 130, 0.72);
+  --pet-log-loading-border-bright: rgba(245, 158, 11, 0.95);
+  --pet-log-loading-border-strong: rgba(187, 114, 30, 0.9);
+  --pet-log-loading-border-glow: rgba(245, 158, 11, 0.42);
+  --pet-log-loading-border-shadow: rgba(245, 158, 11, 0.1);
+  --pet-log-loading-sheen-strong: rgba(245, 158, 11, 0.18);
+  --pet-log-loading-sheen-soft: rgba(255, 210, 130, 0.1);
+  --pet-log-loading-inner-border: rgba(245, 158, 11, 0.2);
+  --pet-log-loading-inner-glow: rgba(245, 158, 11, 0.08);
+  --pet-log-loading-outer-glow: rgba(245, 158, 11, 0.13);
+}
+
+.pet-log-text-cleaning-button-border {
+  --pet-log-loading-border-muted: rgba(22, 128, 75, 0.16);
+  --pet-log-loading-border-soft: rgba(113, 216, 147, 0.72);
+  --pet-log-loading-border-bright: rgba(74, 222, 128, 0.96);
+  --pet-log-loading-border-strong: rgba(22, 128, 75, 0.9);
+  --pet-log-loading-border-glow: rgba(74, 222, 128, 0.46);
+  --pet-log-loading-border-shadow: rgba(22, 128, 75, 0.12);
+  --pet-log-loading-sheen-strong: rgba(74, 222, 128, 0.18);
+  --pet-log-loading-sheen-soft: rgba(113, 216, 147, 0.08);
+  --pet-log-loading-inner-border: rgba(22, 128, 75, 0.18);
+  --pet-log-loading-inner-glow: rgba(74, 222, 128, 0.08);
+  --pet-log-loading-outer-glow: rgba(74, 222, 128, 0.13);
+  background:
+    linear-gradient(#fff, #fff) padding-box,
+    conic-gradient(
+      from var(--pet-log-border-angle),
+      var(--pet-log-loading-border-muted) 0deg,
+      var(--pet-log-loading-border-muted) 72deg,
+      var(--pet-log-loading-border-soft) 118deg,
+      var(--pet-log-loading-border-bright) 142deg,
+      var(--pet-log-loading-border-strong) 154deg,
+      var(--pet-log-loading-border-glow) 170deg,
+      var(--pet-log-loading-border-muted) 220deg,
+      var(--pet-log-loading-border-muted) 360deg
+    )
+    border-box !important;
+}
+
+.pet-log-loading-border.pet-log-record-save-button-border {
+  --pet-log-loading-border-muted: rgba(9, 62, 37, 0.82);
+  --pet-log-loading-border-soft: rgba(216, 255, 172, 0.96);
+  --pet-log-loading-border-bright: rgba(255, 255, 255, 1);
+  --pet-log-loading-border-strong: rgba(4, 55, 32, 1);
+  --pet-log-loading-border-glow: rgba(250, 255, 180, 1);
+  --pet-log-loading-border-shadow: rgba(22, 128, 75, 0.18);
+  --pet-log-loading-sheen-strong: rgba(255, 255, 255, 0.2);
+  --pet-log-loading-sheen-soft: rgba(216, 255, 172, 0.08);
+  --pet-log-loading-inner-border: rgba(255, 255, 255, 0.48);
+  --pet-log-loading-inner-glow: rgba(255, 255, 255, 0.2);
+  --pet-log-loading-outer-glow: rgba(250, 255, 180, 0.34);
+  border: 1px solid transparent !important;
+  color: #fff !important;
+  background:
+    linear-gradient(#8ab99f, #8ab99f) padding-box,
+    conic-gradient(
+      from var(--pet-log-border-angle),
+      var(--pet-log-loading-border-muted) 0deg,
+      var(--pet-log-loading-border-muted) 56deg,
+      var(--pet-log-loading-border-soft) 104deg,
+      var(--pet-log-loading-border-bright) 132deg,
+      var(--pet-log-loading-border-strong) 148deg,
+      var(--pet-log-loading-border-glow) 174deg,
+      var(--pet-log-loading-border-muted) 236deg,
+      var(--pet-log-loading-border-muted) 360deg
+    )
+    border-box !important;
+  box-shadow:
+    0 7px 18px rgba(22, 128, 75, 0.24),
+    0 0 14px rgba(250, 255, 180, 0.38),
+    0 0 0 1px rgba(18, 92, 57, 0.14);
+  animation: pet-log-border-glide 1.25s linear infinite;
+}
+
+.pet-log-notification-alert-border {
+  --pet-log-notification-border-muted: rgba(245, 158, 11, 0.18);
+  --pet-log-notification-border-soft: rgba(255, 210, 130, 0.72);
+  --pet-log-notification-border-bright: rgba(245, 158, 11, 0.95);
+  --pet-log-notification-border-strong: rgba(187, 114, 30, 0.9);
+  --pet-log-notification-border-glow: rgba(245, 158, 11, 0.42);
+  --pet-log-notification-border-shadow: rgba(245, 158, 11, 0.1);
+  --pet-log-notification-inner-border: rgba(245, 158, 11, 0.2);
+  --pet-log-notification-outer-glow: rgba(245, 158, 11, 0.13);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden !important;
+  border: 1px solid transparent !important;
+  background:
+    linear-gradient(#fff, #fff) padding-box,
+    conic-gradient(
+      from var(--pet-log-border-angle),
+      var(--pet-log-notification-border-muted) 0deg,
+      var(--pet-log-notification-border-muted) 72deg,
+      var(--pet-log-notification-border-soft) 118deg,
+      var(--pet-log-notification-border-bright) 142deg,
+      var(--pet-log-notification-border-strong) 154deg,
+      var(--pet-log-notification-border-glow) 170deg,
+      var(--pet-log-notification-border-muted) 220deg,
+      var(--pet-log-notification-border-muted) 360deg
+    )
+    border-box !important;
+  box-shadow:
+    0 12px 34px rgba(49, 65, 44, 0.11),
+    0 0 18px var(--pet-log-notification-outer-glow),
+    0 0 0 1px var(--pet-log-notification-border-shadow);
+  animation: pet-log-border-glide 2.7s linear infinite;
+}
+
+.pet-log-notification-alert-border::after {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border: 1px solid var(--pet-log-notification-inner-border);
+  border-radius: 15px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.pet-log-notification-alert-border > * {
+  position: relative;
+  z-index: 2;
+}
+
+.pet-log-notification-alert-border-orange {
+  --pet-log-notification-border-muted: rgba(245, 158, 11, 0.18);
+  --pet-log-notification-border-soft: rgba(245, 158, 11, 0.72);
+  --pet-log-notification-border-bright: rgba(245, 158, 11, 0.95);
+  --pet-log-notification-border-strong: rgba(187, 114, 30, 0.9);
+  --pet-log-notification-border-glow: rgba(245, 158, 11, 0.42);
+  --pet-log-notification-border-shadow: rgba(245, 158, 11, 0.1);
+  --pet-log-notification-inner-border: rgba(245, 158, 11, 0.2);
+  --pet-log-notification-outer-glow: rgba(245, 158, 11, 0.13);
+}
+
+.pet-log-notification-alert-border-red {
+  --pet-log-notification-border-muted: rgba(190, 76, 60, 0.18);
+  --pet-log-notification-border-soft: rgba(255, 157, 140, 0.72);
+  --pet-log-notification-border-bright: rgba(239, 68, 68, 0.95);
+  --pet-log-notification-border-strong: rgba(190, 76, 60, 0.9);
+  --pet-log-notification-border-glow: rgba(239, 68, 68, 0.42);
+  --pet-log-notification-border-shadow: rgba(190, 76, 60, 0.1);
+  --pet-log-notification-inner-border: rgba(190, 76, 60, 0.22);
+  --pet-log-notification-outer-glow: rgba(239, 68, 68, 0.13);
+}
+
+.pet-log-loading-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    ellipse 74% 42% at 50% 0%,
+    var(--pet-log-loading-sheen-strong),
+    var(--pet-log-loading-sheen-soft) 42%,
+    transparent 72%
+  );
+  opacity: 0.72;
+  pointer-events: none;
+  z-index: 1;
+  animation: pet-log-border-sheen 2.7s ease-in-out infinite;
+}
+
+.pet-log-loading-border::after {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border: 1px solid var(--pet-log-loading-inner-border);
+  border-radius: 15px;
+  box-shadow:
+    inset 0 0 18px var(--pet-log-loading-inner-glow),
+    0 0 22px var(--pet-log-loading-outer-glow);
+  pointer-events: none;
+  z-index: 1;
+  animation: pet-log-border-breathe 1.8s ease-in-out infinite;
+}
+
+.pet-log-loading-border.pet-log-record-save-button-border::before {
+  opacity: 0.9;
+}
+
+.pet-log-loading-border.pet-log-record-save-button-border::after {
+  inset: 1px;
+  border-color: rgba(255, 255, 255, 0.5);
+  border-radius: 14px;
+  animation: pet-log-record-save-border-pulse 1.2s ease-in-out infinite;
+}
+
+.pet-log-loading-border > * {
+  position: relative;
+  z-index: 2;
+}
+
+.pet-log-sync-wave > span {
+  display: inline-block;
+  min-width: 0.24em;
+  transform-origin: 50% 70%;
+  animation: pet-log-sync-letter 2.7s ease-in-out infinite;
+  will-change: transform;
+}
+
+@keyframes pet-log-border-glide {
+  from {
+    --pet-log-border-angle: 0deg;
+  }
+  to {
+    --pet-log-border-angle: 360deg;
+  }
+}
+
+@keyframes pet-log-border-sheen {
+  0%,
+  100% {
+    opacity: 0.42;
+    transform: translateY(-2px);
+  }
+  50% {
+    opacity: 0.82;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pet-log-border-breathe {
+  0%,
+  100% {
+    opacity: 0.58;
+    box-shadow:
+      inset 0 0 12px rgba(74, 222, 128, 0.06),
+      0 0 14px rgba(74, 222, 128, 0.1);
+  }
+  50% {
+    opacity: 1;
+    box-shadow:
+      inset 0 0 22px rgba(74, 222, 128, 0.11),
+      0 0 28px rgba(74, 222, 128, 0.18);
+  }
+}
+
+@keyframes pet-log-record-save-border-pulse {
+  0%,
+  100% {
+    opacity: 0.9;
+    box-shadow:
+      inset 0 0 9px rgba(255, 255, 255, 0.18),
+      0 0 10px rgba(250, 255, 180, 0.28),
+      0 0 0 1px rgba(18, 92, 57, 0.14);
+  }
+  50% {
+    opacity: 1;
+    box-shadow:
+      inset 0 0 13px rgba(255, 255, 255, 0.26),
+      0 0 18px rgba(250, 255, 180, 0.42),
+      0 0 0 1px rgba(255, 255, 255, 0.2);
+  }
+}
+
+@keyframes pet-log-sync-letter {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  42% {
+    transform: scale(1.28);
+  }
+  68% {
+    transform: scale(0.94);
+  }
+}
+
+@keyframes pet-log-float-soft {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes pet-log-pulse-dot {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(22, 128, 75, 0.26);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 0 7px rgba(22, 128, 75, 0);
+    transform: scale(1.08);
+  }
+}
+
+@keyframes pet-log-chart-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes pet-log-typing-dot {
+  0%,
+  80%,
+  100% {
+    opacity: 0.62;
+    transform: translateY(0) scale(0.92);
+  }
+  40% {
+    opacity: 1;
+    transform: translateY(-2px) scale(1.08);
+  }
+}
+
+@keyframes pet-log-chat-sparkle {
+  0%,
+  100% {
+    opacity: 0.46;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes pet-log-backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pet-log-backdrop-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes pet-log-panel-in-left {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes pet-log-panel-out-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes pet-log-panel-in-right {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes pet-log-panel-out-right {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+.pet-log-backdrop-in {
+  animation: pet-log-backdrop-in 180ms ease-out both;
+}
+
+.pet-log-backdrop-out {
+  animation: pet-log-backdrop-out 180ms ease-in both;
+}
+
+.pet-log-panel-in-left {
+  animation: pet-log-panel-in-left 220ms ease-out both;
+}
+
+.pet-log-panel-out-left {
+  animation: pet-log-panel-out-left 180ms ease-in both;
+}
+
+.pet-log-panel-in-right {
+  animation: pet-log-panel-in-right 220ms ease-out both;
+}
+
+.pet-log-panel-out-right {
+  animation: pet-log-panel-out-right 180ms ease-in both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 1ms !important;
+  }
+
+  .pet-log-chart-draw {
+    stroke-dashoffset: 0;
+  }
+}
