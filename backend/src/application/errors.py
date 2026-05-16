@@ -1,0 +1,2 @@
+class PetLogPipelineError(Exception):
+    pass

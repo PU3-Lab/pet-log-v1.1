@@ -1,0 +1,87 @@
+import importlib
+import unittest
+
+
+class TestPackageStructure(unittest.TestCase):
+    def test_target_architecture_packages_are_importable(self):
+        modules = (
+            "application.agents.care_context",
+            "application.agents.context_analysis",
+            "application.agents.hospital",
+            "application.agents.notification",
+            "application.agents.pet_persona",
+            "application.agents.photo_record_understanding",
+            "application.agents.proactive_question",
+            "application.agents.record_structuring",
+            "application.agents.record_summary",
+            "application.agents.reminder",
+            "application.agents.risk_detection",
+            "application.agents.suggestion",
+            "application.pipelines.pet_log_agent",
+            "agent_runtime.tool_registry",
+            "middleware.safety",
+            "middleware.hospital_fallback",
+            "middleware.logging",
+            "middleware.tracing",
+            "middleware.retry",
+            "middleware.validation",
+            "tools.record_tools",
+            "tools.profile_tools",
+            "tools.schedule_tools",
+            "tools.care_tools",
+            "tools.speech_tools",
+            "infrastructure.llm.constants",
+            "infrastructure.llm.record_structuring",
+            "infrastructure.llm.record_structuring.mapper",
+            "infrastructure.llm.record_structuring.model",
+            "infrastructure.llm.record_structuring.prompt",
+            "infrastructure.llm.record_structuring.provider",
+            "infrastructure.llm.record_structuring.schema",
+            "infrastructure.llm.record_summary",
+            "infrastructure.llm.record_summary.mapper",
+            "infrastructure.llm.record_summary.model",
+            "infrastructure.llm.record_summary.prompt",
+            "infrastructure.llm.record_summary.provider",
+            "infrastructure.llm.record_summary.schema",
+            "infrastructure.llm.image_record_understanding",
+            "infrastructure.llm.image_record_understanding.mapper",
+            "infrastructure.llm.image_record_understanding.model",
+            "infrastructure.llm.image_record_understanding.prompt",
+            "infrastructure.llm.image_record_understanding.provider",
+            "infrastructure.llm.image_record_understanding.schema",
+            "infrastructure.llm.care_answer",
+            "infrastructure.llm.care_answer.mapper",
+            "infrastructure.llm.care_answer.prompt",
+            "infrastructure.llm.care_answer.provider",
+            "infrastructure.knowledge.ingester",
+            "infrastructure.knowledge.pipeline",
+            "infrastructure.knowledge.retriever",
+            "infrastructure.knowledge.web_evaluator",
+            "infrastructure.knowledge.web_search",
+            "infrastructure.llm.pet_persona",
+            "infrastructure.llm.pet_persona.mapper",
+            "infrastructure.llm.pet_persona.prompt",
+            "infrastructure.llm.pet_persona.provider",
+            "infrastructure.maps",
+            "infrastructure.maps.google_places",
+            "infrastructure.speech.speech_to_text",
+            "infrastructure.speech.text_to_speech",
+            "infrastructure.repositories.record_repository",
+            "infrastructure.policies.safety_guard",
+            "infrastructure.policies.cause_hypothesis_policy",
+            "infrastructure.policies.proactive_question",
+            "infrastructure.policies.proactive_question.policy",
+            "infrastructure.notifications.policy",
+            "infrastructure.composers.home_feed_composer",
+            "presentation.cli",
+            "presentation.http",
+            "composition",
+        )
+
+        for module in modules:
+            with self.subTest(module=module):
+                importlib.import_module(module)
+
+    def test_interface_package_is_removed(self):
+        with self.assertRaises(ModuleNotFoundError):
+            importlib.import_module("application.interfaces")
