@@ -1,0 +1,73 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Python tooling
+.coverage
+htmlcov/
+*.egg-info/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Node dependencies
+node_modules/
+
+# Next.js
+.next/
+out/
+*.tsbuildinfo
+playwright-report/
+test-results/
+
+# Test artifacts
+playwright-report/
+test-results/
+
+# Production builds
+dist/
+build/
+.azure-deploy/
+
+# Local secrets and environment overrides
+.env
+.env.*
+!.env.example
+
+# Logs and Diagnostics
+*.log
+logs_*.zip
+*.zip
+
+# Docker and Builds
+dist/
+build/
+.azure-deploy/
+*.egg-info/
+
+# Backend Specific Caches
+backend/.uv-cache/
+backend/.venv/
+backend/.pytest_cache/
+backend/.ruff_cache/
+backend/.python-version
+backend/.chroma_db/
+backend/__pycache__/
+backend/requirements.txt
+
+# Editors
+.idea/
+.vscode/
+.worktrees/
+.worktrees/
+
+# Claude Code local settings (personal allowlists, not project config)
+.claude/settings.local.json
