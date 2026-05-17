@@ -1,81 +1,67 @@
 # 세션 요약
 
-새 Codex 세션에서 이 저장소의 이전 작업 맥락을 이어받을 때 먼저 참고한다.
+새 Codex/Claude 세션에서 이 저장소의 이전 작업 맥락을 이어받을 때 먼저 참고한다.
 
-## 현재 목표
+---
 
-`gpt-5.5`의 실제 로컬 컨텍스트 크기를 기준으로 Codex `model_auto_compact_token_limit` 값을 조정한다. 추정값이 아니라 로컬 모델 메타데이터 기준으로 판단한다.
+## 2026-05-17 세션
 
-## 확인한 로컬 사실
+### 완료된 작업
 
-- 저장소: `/Users/kimkyungpyo/Workspaces/projests/pet-log`
-- 활성 전역 Codex 설정: `/Users/kimkyungpyo/.codex/config.toml`
-- 설정된 모델: `gpt-5.5`
-- 설정된 reasoning effort: `high`
-- 현재 자동 compact 설정:
+#### 1. Backend 분산 아키텍처 설계 완료 (2-service로 확정)
 
-```toml
-model_auto_compact_token_limit = 180000
-```
+초기 4-service 설계를 검토 후 **2-service**로 간소화.
 
-- `codex --version`으로 확인한 Codex CLI 버전:
+| 서비스 | 포트 | 담당 |
+|--------|------|------|
+| Main API | 8001 | auth·펫·기록·일정·분석·알림·커뮤니티·AI작업관리 |
+| AI Worker | 8002 | LangGraph·Whisper·TTS (Queue 기반, task_type 분기) |
 
-```text
-codex-cli 0.130.0
-```
+**4-service → 2-service 이유**: Auth/Core/Community를 별도 서비스로 분리하면 MVP 단계에서 운영 복잡도만 증가. 동일 Main API 내 모듈로 구성, 필요 시 분리.
 
-- `codex debug models`로 확인한 실제 모델 메타데이터:
+**핵심 결정:**
+- **DB**: Azure Cosmos DB (NoSQL) — Repository Pattern으로만 접근 (서비스 코드에서 Cosmos SDK 직접 호출 금지)
+- **Gateway**: Azure API Management (JWT 검증, `X-User-Id`/`X-User-Role` 헤더 주입)
+- **AI 비동기**: `POST /api/records` → `{task_id}` 즉시 반환 → `GET /api/tasks/{task_id}` 폴링
+- **AI Worker 데이터**: Queue 메시지에 `task_type` + `payload` 포함 (AI Worker → DB 직접 접근 없음)
+- **내부 콜백 보안**: AI Worker → Main API 콜백 시 `X-Internal-Secret` 헤더 검증
+- **Community 사용자**: `user_snapshot` 비정규화 (Auth 실시간 호출 없음)
+- **Community AI**: 커뮤니티도 Queue로 AI 처리 가능 (`task_type: content_moderation | feed_ranking`)
+- **로컬 개발**: docker-compose (4컨테이너: cosmos-emulator, azurite, main_api, ai_worker)
 
-```text
-gpt-5.5 context_window = 272000
-gpt-5.5 max_context_window = 1000000
-gpt-5.5 effective_context_window_percent = 95
-```
+#### 2. 설계 문서 작성 및 업데이트
 
-## 계산
+- **위치**: `docs/superpowers/specs/2026-05-17-backend-distributed-design.md`
 
-이 로컬 `gpt-5.5` 설정에서 `180000`은 90%가 아니다.
+---
 
-```text
-180000 / 272000 = 66.2%
-```
+### 다음 세션 할 일
 
-유효 컨텍스트 기준으로 보면:
+**Backend Sprint 1** 구현:
+1. `backend/app/services/{main_api,ai_worker}/` 디렉토리 구조 생성
+2. 각 서비스 `pyproject.toml`, `Dockerfile`, `main.py`, `GET /health`
+3. `docker-compose.yml`: 2서비스 + Cosmos DB Emulator + Azurite + `.env.example`
+4. Main API: `POST /auth/register`, `POST /auth/login`, `POST /auth/refresh`
+5. Main API: 펫 CRUD (`GET/POST /api/pets`, `GET/PUT/DELETE /api/pets/{id}`)
+6. 서비스별 pytest 기본 테스트
 
-```text
-272000 * 0.95 = 258400
-180000 / 258400 = 69.7%
-```
+---
 
-## 권장값
+### 참조 파일
 
-이 환경에서는 `180000`이 꽤 이른 편이다. 균형 잡힌 권장값은 다음이다.
+| 파일 | 용도 |
+|------|------|
+| `docs/superpowers/specs/2026-05-17-backend-distributed-design.md` | 승인된 설계 문서 |
+| `subtree/backend/src/domain/` | v1.0 도메인 엔티티 기준 |
+| `subtree/backend/src/agent_runtime/` | AI Worker 이전 대상 |
+| `subtree/backend/src/infrastructure/speech/` | Whisper + TTS → AI Worker |
+| `subtree/backend/src/presentation/http/` | 라우트 분배 기준 |
+| `subtree/backend/pyproject.toml` | 의존성 참조 |
 
-```toml
-model_auto_compact_token_limit = 220000
-```
+---
 
-이 값의 비율은 다음과 같다.
+### 작업 규칙 (이 세션에서 확인됨)
 
-```text
-220000 / 272000 = 80.9%
-220000 / 258400 = 85.1%
-```
-
-대안 값:
-
-- `210000`: 더 안전한 값, 전체 272k 기준 약 77.2%
-- `220000`: 추천 균형값
-- `230000`: 더 늦은 compact, 전체 272k 기준 약 84.6%
-
-도구 출력이 많은 작업 중에 compact가 걸릴 위험을 감수하려는 의도가 아니라면 `240000`을 크게 넘기지 않는 것이 좋다.
-
-## 다음 단계
-
-사용자가 권장값 적용을 원하면 `/Users/kimkyungpyo/.codex/config.toml`에서 다음 값으로 바꾼다.
-
-```toml
-model_auto_compact_token_limit = 220000
-```
-
-관련 없는 설정은 변경하지 않는다.
+- 설계 완료 후 코드 작성 전 반드시 설계 문서(`docs/superpowers/specs/`) 먼저 작성
+- 코드 작성 전 사용자 승인 필요
+- main 브랜치에서 작업 시 항상 새 브랜치 생성
